@@ -1,0 +1,342 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Austin Angelo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Austin Angelo, producer and production manager for live events, awards shows and broadcast television.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: stadium-at-night. Giant signage-style name, a running client ticker, then the work as a lit grid of screens, newest first. */
+:root {
+  --night: #0c0e12;        /* page ground, blue-black like an arena before the lights */
+  --panel: #151820;        /* tile backing */
+  --line: #262a35;         /* hairlines */
+  --ink: #eeeae2;          /* main text, warm white */
+  --dim: #8d909a;          /* secondary text */
+  --gold: #e3a83b;         /* stage-light amber, carried over from the current site */
+  --display: "Big Shoulders Display", "Oswald", "Arial Narrow", Impact, sans-serif;
+  --body: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--night);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+.wrap {
+  max-width: 1240px;
+  margin-inline: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+@media (min-width: 700px) {
+  .wrap { padding-left: max(40px, env(safe-area-inset-left, 0px)); padding-right: max(40px, env(safe-area-inset-right, 0px)); }
+}
+
+.label {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+/* ---------- Top bar ---------- */
+.top {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 10;
+  background: color-mix(in srgb, var(--night) 82%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 14px; }
+.mark { font-family: var(--display); font-weight: 800; font-size: 22px; letter-spacing: .02em; text-decoration: none; text-transform: uppercase; }
+.top nav { display: flex; gap: 22px; }
+.top nav a { font-family: var(--mono); font-size: 13px; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; color: var(--dim); }
+.top nav a:hover { color: var(--gold); }
+
+/* ---------- Hero ---------- */
+.hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
+.hero::before { /* faint stadium light wash from above */
+  content: ""; position: absolute; inset: -40% -10% auto -10%; height: 120%;
+  background: radial-gradient(ellipse 50% 45% at 72% 0%, color-mix(in srgb, var(--gold) 22%, transparent), transparent 70%);
+  pointer-events: none;
+}
+.hero .wrap { position: relative; padding-block: 72px 56px; }
+.onair { display: inline-flex; align-items: center; gap: 10px; }
+.onair .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 0 4px color-mix(in srgb, var(--gold) 25%, transparent); }
+@media (prefers-reduced-motion: no-preference) { .onair .dot { animation: pulse 2.4s ease-in-out infinite; } }
+@keyframes pulse { 50% { box-shadow: 0 0 0 8px transparent; } }
+h1 {
+  font-family: var(--display);
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: clamp(64px, 15vw, 196px);
+  line-height: .84;
+  letter-spacing: -.005em;
+  margin: 0;
+}
+h1 span { display: block; }
+h1 .out { color: transparent; -webkit-text-stroke: 1.5px var(--ink); }
+.lede { max-width: 34ch; font-size: clamp(19px, 2.2vw, 24px); line-height: 1.4; margin: 0; text-wrap: balance; }
+.lede b { color: var(--gold); font-weight: 600; }
+.hero-meta { display: flex; flex-wrap: wrap; gap: 12px 28px; }
+.hero-meta a { text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 2px; }
+.hero-meta a:hover { color: var(--gold); border-color: var(--gold); }
+
+
+/* Multiview: the newest four shows as a broadcast monitor wall */
+.hero-grid { display: grid; gap: 40px; align-items: center; }
+@media (min-width: 960px) { .hero-grid { grid-template-columns: 1fr 1fr; } }
+.hero-text { display: grid; gap: 28px; min-width: 0; }
+.multiview { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 6px; background: #000; border: 1px solid var(--line); border-radius: 4px; box-shadow: 0 30px 80px -30px color-mix(in srgb, var(--gold) 30%, transparent); }
+.mv { position: relative; aspect-ratio: 16 / 9; max-width: 100%; overflow: hidden; background: var(--panel); display: block; }
+.mv img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s; }
+.mv:hover img { transform: scale(1.05); }
+.mv .tag { position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: space-between; gap: 8px; padding: 14px 8px 5px; font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: #fff; background: linear-gradient(transparent, rgba(0,0,0,.85)); }
+.mv .tag span:last-child { white-space: nowrap; flex: none; }
+.mv .tag span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.mv.pgm { outline: 3px solid var(--gold); outline-offset: -3px; }
+.mv.pgm .tag span:last-child { color: var(--gold); }
+
+/* ---------- Client ticker ---------- */
+.ticker { border-bottom: 1px solid var(--line); overflow: hidden; padding-block: 18px; }
+.ticker-track { display: flex; width: max-content; gap: 0; }
+.ticker ul { display: flex; list-style: none; margin: 0; padding: 0; }
+.ticker li {
+  font-family: var(--display); font-weight: 600; font-size: 26px; text-transform: uppercase; letter-spacing: .03em;
+  color: var(--dim); white-space: nowrap; padding-inline: 22px; display: flex; align-items: center; gap: 44px;
+}
+.ticker li::after { content: "✦"; font-size: 12px; color: var(--gold); margin-right: -22px; }
+@media (prefers-reduced-motion: no-preference) { .ticker-track { animation: roll 55s linear infinite; } }
+@media (prefers-reduced-motion: reduce) { .ticker-track { flex-wrap: wrap; width: auto; } .ticker ul[aria-hidden] { display: none; } .ticker ul { flex-wrap: wrap; } }
+@keyframes roll { to { transform: translateX(-50%); } }
+
+/* ---------- Work grid ---------- */
+section { scroll-margin-top: 70px; }
+.work .wrap { padding-block: 64px 80px; }
+.sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 32px; }
+h2 { font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: clamp(40px, 6vw, 72px); line-height: .9; margin: 0; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 40px 28px; }
+.card { display: grid; gap: 14px; text-decoration: none; min-width: 0; }
+.shot { position: relative; aspect-ratio: 16 / 9; max-width: 100%; overflow: hidden; background: var(--panel); border-radius: 3px; outline: 1px solid var(--line); outline-offset: -1px; }
+.shot img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s cubic-bezier(.2,.7,.2,1), filter .6s; filter: saturate(.92) brightness(.92); }
+.shot.fit img { object-fit: contain; padding: 8% 14%; background: #fff; }
+.shot .go {
+  position: absolute; right: 12px; bottom: 12px; font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+  background: var(--gold); color: var(--night); padding: 6px 10px; border-radius: 2px; opacity: 0; transform: translateY(6px); transition: .3s;
+}
+a.card:hover .shot img, a.card:focus-visible .shot img { transform: scale(1.04); filter: none; }
+a.card:hover .go, a.card:focus-visible .go { opacity: 1; transform: none; }
+a.card:hover h3 { color: var(--gold); }
+.card h3 { font-family: var(--body); font-weight: 600; font-size: 18px; line-height: 1.25; margin: 0; text-wrap: balance; transition: color .2s; }
+.roles { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; }
+.roles li { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; color: var(--dim); border-top: 1px solid var(--line); padding-top: 6px; }
+.roles li:not(:first-child) { border-top: 0; padding-top: 0; }
+.roles .yr { font-family: var(--mono); font-size: 12.5px; white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--ink); }
+.via { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); }
+
+/* ---------- About ---------- */
+.about { border-top: 1px solid var(--line); background: linear-gradient(var(--panel), var(--night)); }
+.about .wrap { padding-block: 72px 88px; display: grid; gap: 48px; }
+@media (min-width: 900px) { .about .wrap { grid-template-columns: 5fr 6fr; align-items: start; } }
+.about p { margin: 0; max-width: 60ch; }
+.about .big { font-size: clamp(22px, 2.6vw, 30px); line-height: 1.35; text-wrap: balance; }
+.about-col { display: grid; gap: 28px; min-width: 0; }
+/* Collage: rows of photos whose widths follow each image's shape, so every row is one clean height */
+.collage { display: grid; gap: 8px; min-width: 0; }
+.collage-row { display: flex; gap: 8px; }
+.collage figure { margin: 0; flex: 1 1 0; min-width: 0; }
+.collage img { width: 100%; max-width: 100%; height: auto; object-fit: cover; display: block; border-radius: 2px; outline: 1px solid var(--line); outline-offset: -1px; transition: filter .4s; filter: saturate(.92); }
+.collage img:hover { filter: none; }
+
+.clients { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 0; }
+.clients li { font-family: var(--mono); font-size: 13px; border: 1px solid var(--line); padding: 5px 10px; border-radius: 2px; }
+.contact { display: grid; gap: 14px; padding: 24px; border: 1px solid var(--line); border-radius: 3px; background: var(--night); }
+.email-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.email { font-family: var(--display); font-weight: 800; font-size: clamp(24px, 3.4vw, 36px); letter-spacing: .01em; user-select: all; overflow-wrap: anywhere; text-decoration: none; }
+.email:hover { color: var(--gold); }
+button.copy {
+  font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; cursor: pointer;
+  background: transparent; color: var(--ink); border: 1px solid var(--dim); padding: 7px 12px; border-radius: 2px;
+}
+button.copy:hover { border-color: var(--gold); color: var(--gold); }
+.socials { display: flex; flex-wrap: wrap; gap: 10px 22px; }
+.socials a { font-family: var(--mono); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; text-decoration: none; color: var(--dim); }
+.socials a:hover { color: var(--gold); }
+
+footer .wrap { padding-block: 26px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; border-top: 1px solid var(--line); }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="#top">Austin Angelo</a>
+    <nav aria-label="Sections">
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero" aria-label="Introduction">
+    <div class="wrap hero-grid">
+      <div class="hero-text">
+      <span class="label onair"><span class="dot" aria-hidden="true"></span>Producer · Production Manager</span>
+      <h1><span>Austin</span><span class="out">Angelo</span></h1>
+      <p class="lede">Live events, awards shows, and broadcast TV, from <b>NHL Outdoor Stadium Games</b> to the <b>Anime Awards in Tokyo</b>, and <b>America’s Got Talent</b>.</p>
+      <div class="hero-meta label">
+        <a href="#work">See the work ↓</a>
+        <a href="#about">Get in touch</a>
+      </div>
+      </div>
+      <div class="multiview" id="multiview" aria-label="Latest shows"></div>
+    </div>
+  </section>
+
+  <div class="ticker" aria-label="Clients">
+    <div class="ticker-track">
+      <ul id="clients-a"></ul>
+      <ul aria-hidden="true" id="clients-b"></ul>
+    </div>
+  </div>
+
+  <section class="work" id="work" aria-labelledby="work-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="work-h">Production</h2>
+        <span class="label">Most recent first</span>
+      </div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+
+  <section class="about" id="about" aria-labelledby="about-h">
+    <div class="wrap">
+      <div class="about-col">
+        <h2 id="about-h">About</h2>
+        <p class="big">For the last 10 years, I’ve led large-scale productions across live events, awards shows, specials, commercials, and television. I’ve had the privilege of working across North America, Europe, and Asia, for clients like the NHL, Apple, Crunchyroll, and NBC.</p>
+        <p>Off set, you’ll find me behind a camera, playing bass, on a bike, a long hike, or traveling somewhere new.</p>
+        <div class="contact">
+          <span class="label">Email</span>
+          <div class="email-row">
+            <a class="email" id="email" href="mailto:austin@kombinemedia.com">austin@kombinemedia.com</a>
+            <button class="copy" id="copy-email" type="button">Copy</button>
+          </div>
+          <div class="socials">
+            <a href="https://www.instagram.com/a___angelo/" target="_blank" rel="noopener">Instagram ↗</a>
+            <a href="https://www.imdb.com/name/nm9212666/" target="_blank" rel="noopener">IMDb ↗</a>
+            <a href="https://www.linkedin.com/in/austin-angelo-60961519a/" target="_blank" rel="noopener">LinkedIn ↗</a>
+          </div>
+        </div>
+      </div>
+      <div class="collage" aria-label="Photos of Austin">
+        <div class="collage-row">
+          <figure style="flex-grow:0.75"><img src="images/austin-portrait.jpg" alt="Portrait of Austin Angelo" style="aspect-ratio:0.75; object-position:50% 30%" loading="lazy" decoding="async"></figure>
+          <figure style="flex-grow:0.75"><img src="images/austin-stadium.jpg" alt="Austin on the field during an NHL Stadium Series game, wearing a headset" style="aspect-ratio:0.75; object-position:50% 50%" loading="lazy" decoding="async"></figure>
+          <figure style="flex-grow:0.75"><img src="images/offset-camera.jpg" alt="Austin shooting with a film rangefinder camera in the desert" style="aspect-ratio:0.75; object-position:50% 40%" loading="lazy" decoding="async"></figure>
+        </div>
+        <div class="collage-row">
+          <figure style="flex-grow:1.5"><img src="images/onset-army.jpg" alt="Austin reviewing a shot on a monitor with two soldiers on set" style="aspect-ratio:1.5; object-position:50% 50%" loading="lazy" decoding="async"></figure>
+          <figure style="flex-grow:1.5"><img src="images/offset-skate.jpg" alt="Austin skateboarding past a tall white wall" style="aspect-ratio:1.5; object-position:50% 50%" loading="lazy" decoding="async"></figure>
+        </div>
+        <div class="collage-row">
+          <figure style="flex-grow:1.258"><img src="images/offset-bike.jpg" alt="Austin riding a road bike up a hill" style="aspect-ratio:1.258; object-position:50% 50%" loading="lazy" decoding="async"></figure>
+          <figure style="flex-grow:0.924"><img src="images/offset-trail.jpg" alt="Austin running on a mountain trail above the city" style="aspect-ratio:0.924; object-position:50% 50%" loading="lazy" decoding="async"></figure>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap label">
+    <span>© 2026 Austin Angelo</span>
+    <a href="#top" style="text-decoration:none">Back to top ↑</a>
+  </div>
+</footer>
+
+<script>
+// Edit this list to add, remove or reorder projects. Newest goes at the top.
+const PROJECTS = [
+  { t: "2026 Tim Hortons NHL Heritage Classic", img: "heritage-2026.jpg", url: "https://www.nhl.com/events/nhl-heritage-classic/", roles: [["Production Manager", "2026"]] },
+  { t: "The Darcys: Easterseals Disability Arts & Culture Awards", img: "darcys.webp", url: "", roles: [["Associate Producer", "2026"]] },
+  { t: "2026 Upper Deck NHL Draft", img: "nhl-draft-2026.webp", url: "https://www.nhl.com/events/nhl-draft/", roles: [["Production Manager", "2026"]] },
+  { t: "Crunchyroll Anime Awards 2026", img: "crunchyroll-2026.webp", url: "https://www.crunchyroll.com/news/announcements/2026/4/2/anime-awards-2026-nominees-full-list", roles: [["Associate Producer", "2026"]] },
+  { t: "2026 Film Independent Spirit Awards", img: "spirit-2026.jpg", url: "https://www.youtube.com/watch?v=H5dyH3hO5kk", roles: [["Associate Producer", "2026"]] },
+  { t: "2026 NFCU NHL Stadium Series", img: "stadium-2026.png", url: "https://www.nhl.com/events/nhl-stadium-series/", roles: [["Production Manager", "2026"]] },
+  { t: "2026 Discover NHL Winter Classic", img: "winter-2026.png", url: "https://www.nhl.com/events/nhl-winter-classic/2025-26/", roles: [["Production Manager", "2025–26"]] },
+  { t: "8th Annual Celebration of Black Cinema & Television", img: "black-cinema-8.webp", url: "https://deadline.com/gallery/8th-critic-choice-celebration-black-cinema-tv-gala/the-critics-choice-associations-8th-annual-celebration-of-black-cinema-television-inside-7/", roles: [["Line Producer", "2025"]] },
+  { t: "Crunchyroll Anime Awards 2025", img: "crunchyroll-2025.jpg", url: "https://www.youtube.com/watch?v=XfvswfDsdjE", roles: [["Associate Producer", "2025"]] },
+  { t: "40th Film Independent Spirit Awards", img: "spirit-2025.jpg", url: "https://www.youtube.com/watch?v=L8XBHXqjBeQ", roles: [["Associate Producer", "2025"]] },
+  { t: "2025 NFCU NHL Stadium Series", img: "stadium-2025.webp", url: "https://www.youtube.com/watch?v=eDRoGOjg4q8", roles: [["Production Manager", "2025"]] },
+  { t: "2025 Discover NHL Winter Classic", img: "winter-2025.webp", url: "https://www.youtube.com/playlist?list=PLHjYSHN8W_flldJ2Vdys_lfdGP_q9m4ai", roles: [["Production Manager", "2024–25"]] },
+  { t: "NHL Draft 2024", img: "nhl-draft-2024.jpg", url: "https://vimeo.com/981030848", roles: [["Senior Production Manager", "2024"]] },
+  { t: "NHL Awards 2024", img: "nhl-awards-2024.png", url: "https://www.youtube.com/playlist?list=PLHjYSHN8W_flldJ2Vdys_lfdGP_q9m4ai", roles: [["Senior Production Manager", "2024"]] },
+  { t: "7th Annual Celebration of Black Cinema & Television", img: "black-cinema-7.png", url: "https://www.youtube.com/watch?v=LSqeYzMsu4M", roles: [["Line Producer", "2024"]] },
+  { t: "LGBTQ+ Critics Choice", img: "lgbtq-2025.png", url: "", roles: [["Line Producer", "2025"]] },
+  { t: "LGBTQ+ Critics Choice", img: "lgbtq-2024.png", url: "https://www.youtube.com/watch?v=H3FlKRB5kQA", roles: [["Line Producer", "2024"]] },
+  { t: "America’s Got Talent", img: "agt.webp", url: "https://www.nbc.com/americas-got-talent", roles: [["Production Manager", "2020–26"], ["Production Coordinator", "2018–20"], ["Art Department Manager", "2017–18"]] },
+  { t: "America’s Got Talent: All-Stars", img: "agt-allstars.jpg", url: "https://www.peacocktv.com/watch-online/tv/americas-got-talent-all-stars/8658899412756718112/seasons/1/episodes/final-performances-episode-8/adc77695-bc7d-3ac2-a497-2af5b72bf47d", roles: [["Production Manager", "2022–23"]] },
+  { t: "America’s Got Talent: Fantasy League", img: "agt-fantasy.jpg", url: "https://www.nbc.com/americas-got-talent-fantasy-league", roles: [["Production Manager", "2023–24"]] },
+  { t: "America’s Got Talent: Extreme", img: "agt-extreme.jpg", url: "https://www.nbc.com/americas-got-talent-extreme", roles: [["Production Manager", "2021–22"]] },
+  { t: "Amazon Holiday Plays", img: "amazon-holiday.jpg", url: "https://www.youtube.com/watch?v=sY90hM412iA", roles: [["Production Manager", "2020–21"]] },
+  { t: "YouTube Originals: Hello 2021", img: "youtube-hello2021.jpg", url: "https://www.youtube.com/playlist?list=PLjq6DwYksrzwnq3U9b6uOaC_6ADpwU_sT", roles: [["Production Manager", "2020–21"]] },
+  { t: "Director Interviews / Oscars Press", img: "tcm.jpg", fit: true, via: "Kombine Media", url: "https://www.tcm.com/", roles: [["Production Manager", "2022–now"]] },
+  { t: "Apple Internal Live Broadcast / Keynote", img: "apple.png", fit: true, via: "Kombine Media", url: "https://www.apple.com/", roles: [["Production Manager", "2022–24"]] },
+  { t: "DoSomething.org: Rinse, Recycle, Repeat with Mandy Moore", img: "dosomething.png", url: "https://www.youtube.com/watch?v=W5DDVQEGhPA", roles: [["Production Coordinator", "2018"]] },
+];
+
+const CLIENTS = ["NHL", "Crunchyroll", "Apple", "Amazon", "YouTube", "US Army", "IKEA", "Sonic", "NWSL", "America’s Got Talent", "Critics Choice Association", "Film Independent", "Sony", "PBS", "Easterseals","Dunkin’ Donuts", "Turner Classic Movies", "Kia", "NFL", "NBC", "Lavazza", "Lionsgate"];
+
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+document.getElementById("grid").innerHTML = PROJECTS.map(p => {
+  const tag = p.url ? "a" : "div";
+  const link = p.url ? ` href="${esc(p.url)}" target="_blank" rel="noopener"` : "";
+  return `<${tag} class="card"${link}>
+    <div class="shot${p.fit ? " fit" : ""}">
+      <img src="images/${p.img}" alt="${esc(p.t)}" loading="lazy" decoding="async">
+      ${p.url ? '<span class="go">Watch / visit ↗</span>' : ""}
+    </div>
+    ${p.via ? `<span class="via">via ${esc(p.via)}</span>` : ""}
+    <h3>${esc(p.t)}</h3>
+    <ul class="roles">${p.roles.map(([r, y]) => `<li><span>${esc(r)}</span><span class="yr">${y}</span></li>`).join("")}</ul>
+  </${tag}>`;
+}).join("");
+
+
+document.getElementById("multiview").innerHTML = PROJECTS.slice(0, 4).map((p, i) =>
+  `<a class="mv${i === 0 ? " pgm" : ""}" href="${esc(p.url)}" target="_blank" rel="noopener">
+    <img src="images/${p.img}" alt="${esc(p.t)}">
+    <span class="tag"><span>${esc(p.t)}</span><span>${i === 0 ? "PGM" : "CAM " + (i + 1)}</span></span>
+  </a>`).join("");
+
+const clientItems = CLIENTS.map(c => `<li>${esc(c)}</li>`).join("");
+document.getElementById("clients-a").innerHTML = clientItems;
+document.getElementById("clients-b").innerHTML = clientItems;
+
+const copyBtn = document.getElementById("copy-email");
+copyBtn.addEventListener("click", () => {
+  const addr = document.getElementById("email").textContent;
+  const done = () => { copyBtn.textContent = "Copied"; setTimeout(() => copyBtn.textContent = "Copy", 1800); };
+  const fallback = () => {
+    const r = document.createRange(); r.selectNodeContents(document.getElementById("email"));
+    const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+    copyBtn.textContent = "Press ⌘C";
+  };
+  try { navigator.clipboard.writeText(addr).then(done, fallback); } catch (e) { fallback(); }
+});
+</script>

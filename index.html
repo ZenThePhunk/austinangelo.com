@@ -132,8 +132,10 @@ section { scroll-margin-top: 70px; }
 .work .wrap { padding-block: 64px 80px; }
 .sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 32px; }
 h2 { font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: clamp(40px, 6vw, 72px); line-height: .9; margin: 0; }
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 40px 28px; }
-.card { display: grid; gap: 14px; text-decoration: none; min-width: 0; }
+/* Cards share row tracks (subgrid) so photos, titles and the grey role lines align across a row even when a title wraps */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 14px 28px; }
+.card { display: grid; grid-template-rows: subgrid; grid-row: span 3; gap: 14px; text-decoration: none; min-width: 0; }
+.card .ttl { display: grid; gap: 6px; align-content: start; min-width: 0; }
 .shot { position: relative; aspect-ratio: 16 / 9; max-width: 100%; overflow: hidden; background: var(--panel); border-radius: 3px; outline: 1px solid var(--line); outline-offset: -1px; }
 .shot img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s cubic-bezier(.2,.7,.2,1), filter .6s; filter: saturate(.92) brightness(.92); }
 .shot.fit img { object-fit: contain; padding: 8% 14%; background: #fff; }
@@ -145,7 +147,7 @@ a.card:hover .shot img, a.card:focus-visible .shot img { transform: scale(1.04);
 a.card:hover .go, a.card:focus-visible .go { opacity: 1; transform: none; }
 a.card:hover h3 { color: var(--gold); }
 .card h3 { font-family: var(--body); font-weight: 600; font-size: 18px; line-height: 1.25; margin: 0; text-wrap: balance; transition: color .2s; }
-.roles { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; }
+.roles { list-style: none; margin: 0; padding: 0 0 26px; display: grid; gap: 3px; align-content: start; }
 .roles li { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; color: var(--dim); border-top: 1px solid var(--line); padding-top: 6px; }
 .roles li:not(:first-child) { border-top: 0; padding-top: 0; }
 .roles .yr { font-family: var(--mono); font-size: 12.5px; white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--ink); }
@@ -288,12 +290,12 @@ const PROJECTS = [
   { t: "Crunchyroll Anime Awards 2025", img: "crunchyroll-2025.jpg", url: "https://www.youtube.com/watch?v=XfvswfDsdjE", roles: [["Associate Producer", "2025"]] },
   { t: "40th Film Independent Spirit Awards", img: "spirit-2025.jpg", url: "https://www.youtube.com/watch?v=L8XBHXqjBeQ", roles: [["Associate Producer", "2025"]] },
   { t: "2025 NFCU NHL Stadium Series", img: "stadium-2025.webp", url: "https://www.youtube.com/watch?v=eDRoGOjg4q8", roles: [["Production Manager", "2025"]] },
+  { t: "2nd Annual Celebration of LGBTQ+ Cinema & Television", img: "lgbtq-2025.png", url: "", roles: [["Line Producer", "2025"]] },
   { t: "2025 Discover NHL Winter Classic", img: "winter-2025.webp", url: "https://www.youtube.com/playlist?list=PLHjYSHN8W_flldJ2Vdys_lfdGP_q9m4ai", roles: [["Production Manager", "2024–25"]] },
   { t: "NHL Draft 2024", img: "nhl-draft-2024.jpg", url: "https://vimeo.com/981030848", roles: [["Senior Production Manager", "2024"]] },
   { t: "NHL Awards 2024", img: "nhl-awards-2024.png", url: "https://www.youtube.com/playlist?list=PLHjYSHN8W_flldJ2Vdys_lfdGP_q9m4ai", roles: [["Senior Production Manager", "2024"]] },
   { t: "7th Annual Celebration of Black Cinema & Television", img: "black-cinema-7.png", url: "https://www.youtube.com/watch?v=LSqeYzMsu4M", roles: [["Line Producer", "2024"]] },
-  { t: "LGBTQ+ Critics Choice", img: "lgbtq-2025.png", url: "", roles: [["Line Producer", "2025"]] },
-  { t: "LGBTQ+ Critics Choice", img: "lgbtq-2024.png", url: "https://www.youtube.com/watch?v=H3FlKRB5kQA", roles: [["Line Producer", "2024"]] },
+  { t: "Celebration of LGBTQ+ Cinema & Television", img: "lgbtq-2024.png", url: "https://www.youtube.com/watch?v=H3FlKRB5kQA", roles: [["Line Producer", "2024"]] },
   { t: "America’s Got Talent", img: "agt.webp", url: "https://www.nbc.com/americas-got-talent", roles: [["Production Manager", "2020–26"], ["Production Coordinator", "2018–20"], ["Art Department Manager", "2017–18"]] },
   { t: "America’s Got Talent: All-Stars", img: "agt-allstars.jpg", url: "https://www.peacocktv.com/watch-online/tv/americas-got-talent-all-stars/8658899412756718112/seasons/1/episodes/final-performances-episode-8/adc77695-bc7d-3ac2-a497-2af5b72bf47d", roles: [["Production Manager", "2022–23"]] },
   { t: "America’s Got Talent: Fantasy League", img: "agt-fantasy.jpg", url: "https://www.nbc.com/americas-got-talent-fantasy-league", roles: [["Production Manager", "2023–24"]] },
@@ -317,8 +319,10 @@ document.getElementById("grid").innerHTML = PROJECTS.map(p => {
       <img src="images/${p.img}" alt="${esc(p.t)}" loading="lazy" decoding="async">
       ${p.url ? '<span class="go">Watch / visit ↗</span>' : ""}
     </div>
-    ${p.via ? `<span class="via">via ${esc(p.via)}</span>` : ""}
-    <h3>${esc(p.t)}</h3>
+    <div class="ttl">
+      ${p.via ? `<span class="via">via ${esc(p.via)}</span>` : ""}
+      <h3>${esc(p.t)}</h3>
+    </div>
     <ul class="roles">${p.roles.map(([r, y]) => `<li><span>${esc(r)}</span><span class="yr">${y}</span></li>`).join("")}</ul>
   </${tag}>`;
 }).join("");

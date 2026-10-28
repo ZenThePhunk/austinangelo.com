@@ -120,7 +120,8 @@ h1 .out { color: transparent; -webkit-text-stroke: 1.5px var(--ink); }
 @media (min-width: 960px) { .hero-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
 .hero-text { display: grid; gap: clamp(16px, 2.6vh, 28px); min-width: 0; overflow: clip; overflow-clip-margin: 12px; }
 .multiview { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 6px; background: #000; border: 1px solid var(--line); border-radius: 4px; box-shadow: 0 30px 80px -30px color-mix(in srgb, var(--gold) 30%, transparent); }
-.mv { position: relative; aspect-ratio: 16 / 9; max-width: 100%; overflow: hidden; background: var(--panel); }
+.mv { position: relative; aspect-ratio: 16 / 9; max-width: 100%; overflow: hidden; background: var(--panel); display: block; width: 100%; padding: 0; border: 0; font: inherit; color: inherit; cursor: zoom-in; }
+.mv:hover img.on { filter: brightness(1.08); }
 /* Each screen stacks its photos; the visible one fades in over the last */
 .mv img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity .9s ease; }
 .mv img.on { opacity: 1; }
@@ -128,7 +129,26 @@ h1 .out { color: transparent; -webkit-text-stroke: 1.5px var(--ink); }
 .mv .tag span:last-child { white-space: nowrap; flex: none; color: var(--gold); }
 .mv .tag span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
 .mv-wrap { display: grid; gap: 10px; min-width: 0; }
+.mv-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; }
 .mv-credit { margin: 0; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); text-align: right; }
+.mv-nav { display: flex; gap: 6px; }
+/* Round arrow buttons, shared by the wall and the photo viewer */
+.arrow { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--line); background: color-mix(in srgb, var(--panel) 85%, transparent); color: var(--ink); font-size: 16px; line-height: 1; cursor: pointer; padding: 0; transition: border-color .2s, color .2s; }
+.arrow:hover { border-color: var(--gold); color: var(--gold); }
+
+/* Photo viewer (pops up when a screen is clicked) */
+.lb { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; background: rgba(5, 6, 8, .62); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); color: var(--ink);
+  padding: calc(16px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+.lb[hidden] { display: none; }
+/* The viewer is a framed panel floating over the page, not a full-screen takeover */
+.lb-panel { width: min(860px, 100%); display: grid; gap: 10px; padding: 12px; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; box-shadow: 0 30px 90px -20px rgba(0,0,0,.8), 0 0 0 1px rgba(0,0,0,.4); }
+.lb-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
+.lb-stage { position: relative; background: #000; border-radius: 3px; overflow: hidden; }
+.lb-stage img { width: 100%; max-width: 100%; aspect-ratio: 3 / 2; max-height: 64vh; max-height: 64dvh; object-fit: contain; display: block; }
+.lb-stage .arrow { width: 42px; height: 42px; font-size: 18px; position: absolute; top: 50%; transform: translateY(-50%); background: rgba(12, 14, 18, .7); }
+.lb-stage .prev { left: 10px; } .lb-stage .next { right: 10px; }
+.lb-cap { display: flex; justify-content: space-between; gap: 14px; font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; padding-inline: 2px; }
+.lb-cap b { color: var(--gold); font-weight: 500; }
 
 /* ---------- Client ticker ---------- */
 .ticker { border-bottom: 1px solid var(--line); overflow: hidden; padding-block: 18px; }
@@ -221,8 +241,14 @@ footer .wrap { padding-block: 26px; display: flex; flex-wrap: wrap; justify-cont
       </div>
       </div>
       <figure class="mv-wrap" style="margin:0">
-        <div class="multiview" id="multiview" aria-label="Photos from Austin's shows"></div>
-        <figcaption class="mv-credit">All photos were taken on set by Austin</figcaption>
+        <div class="multiview" id="multiview" aria-label="Photos from Austin's shows. Click a screen to view it larger."></div>
+        <div class="mv-bar">
+          <div class="mv-nav">
+            <button class="arrow" id="wall-prev" type="button" aria-label="Previous set of photos">←</button>
+            <button class="arrow" id="wall-next" type="button" aria-label="Next set of photos">→</button>
+          </div>
+          <figcaption class="mv-credit">All photos were taken on set by Austin</figcaption>
+        </div>
       </figure>
     </div>
   </section>
@@ -276,6 +302,21 @@ footer .wrap { padding-block: 26px; display: flex; flex-wrap: wrap; justify-cont
     <a href="#top" style="text-decoration:none">Back to top ↑</a>
   </div>
 </footer>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Photo viewer" hidden>
+ <div class="lb-panel">
+  <div class="lb-top">
+    <span id="lb-count"></span>
+    <button class="arrow" id="lb-close" type="button" aria-label="Close photo viewer">✕</button>
+  </div>
+  <div class="lb-stage">
+    <img id="lb-img" alt="">
+    <button class="arrow prev" id="lb-prev" type="button" aria-label="Previous photo">←</button>
+    <button class="arrow next" id="lb-next" type="button" aria-label="Next photo">→</button>
+  </div>
+  <div class="lb-cap"><span id="lb-show"></span><b id="lb-cam"></b></div>
+ </div>
+</div>
 
 <script>
 // Edit this list to add, remove or reorder projects. Newest goes at the top.
@@ -338,28 +379,77 @@ const CAMS = [
 ];
 const wall = document.getElementById("multiview");
 wall.innerHTML = CAMS.map((shots, c) =>
-  `<div class="mv">
-    ${shots.map(([f, label], k) => `<img src="images/cams/${f}" alt="${esc(label)}, photo by Austin Angelo"${k ? ' loading="lazy"' : ""} decoding="async"${k ? "" : ' class="on"'}>`).join("")}
+  `<button class="mv" type="button" data-cam="${c}" aria-label="View larger: CAM ${c + 1}">
+    ${shots.map(([f, label], k) => `<img src="images/cams/${f}" alt="${esc(label)}, photo by Austin Angelo" decoding="async"${k ? "" : ' class="on"'}>`).join("")}
     <span class="tag"><span>${esc(shots[0][1])}</span><span>CAM ${c + 1}</span></span>
-  </div>`).join("");
+  </button>`).join("");
 
-// Every HOLD seconds, all four screens switch to their next photo together.
-const HOLD = 6;
-if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
-  wall.querySelectorAll(".mv").forEach((screen, c) => {
-    const imgs = screen.querySelectorAll("img"), label = screen.querySelector(".tag span");
-    imgs.forEach(img => img.loading = "eager"); // start loading the rest so fades never show a blank frame
-    let cur = 0;
-    const step = () => {
-      const n = (cur + 1) % imgs.length;
-      if (imgs[n].complete && imgs[n].naturalWidth) {
-        imgs[cur].classList.remove("on"); imgs[n].classList.add("on");
-        label.textContent = CAMS[c][n][1]; cur = n;
-      }
-    };
-    setInterval(step, HOLD * 1000);
+// All four screens show "set" k together (photo k from each camera).
+const SETS = Math.max(...CAMS.map(c => c.length));
+const screens = [...wall.querySelectorAll(".mv")];
+let set = 0;
+function showSet(k) {
+  set = (k + SETS) % SETS;
+  screens.forEach((screen, c) => {
+    const n = set % CAMS[c].length;
+    screen.querySelectorAll("img").forEach((img, i) => img.classList.toggle("on", i === n));
+    screen.querySelector(".tag span").textContent = CAMS[c][n][1];
   });
 }
+
+// Every HOLD seconds the wall moves to the next set. The arrows move it by hand and restart the clock.
+const HOLD = 6;
+const autoplay = !matchMedia("(prefers-reduced-motion: reduce)").matches;
+let timer;
+function restartTimer() { clearInterval(timer); if (autoplay) timer = setInterval(() => showSet(set + 1), HOLD * 1000); }
+document.getElementById("wall-prev").addEventListener("click", () => { showSet(set - 1); restartTimer(); });
+document.getElementById("wall-next").addEventListener("click", () => { showSet(set + 1); restartTimer(); });
+restartTimer();
+
+// Photo viewer: every photo in wall order (set 1 CAM 1–4, then set 2 …), browsable left/right.
+const PHOTOS = [];
+for (let k = 0; k < SETS; k++) CAMS.forEach((shots, c) => { if (shots[k]) PHOTOS.push({ f: shots[k][0], label: shots[k][1], cam: c + 1 }); });
+const lb = document.getElementById("lb"), lbImg = document.getElementById("lb-img");
+let at = 0, opener = null;
+function lbShow(i) {
+  at = (i + PHOTOS.length) % PHOTOS.length;
+  const p = PHOTOS[at];
+  lbImg.src = `images/cams/${p.f}`; lbImg.alt = `${p.label}, photo by Austin Angelo`;
+  document.getElementById("lb-show").textContent = p.label;
+  document.getElementById("lb-cam").textContent = `CAM ${p.cam}`;
+  document.getElementById("lb-count").textContent = `${at + 1} / ${PHOTOS.length}`;
+}
+function lbOpen(i, from) {
+  opener = from; lbShow(i); lb.hidden = false;
+  document.body.style.overflow = "hidden"; clearInterval(timer);
+  document.getElementById("lb-close").focus();
+}
+function lbClose() {
+  lb.hidden = true; document.body.style.overflow = "";
+  restartTimer(); if (opener) opener.focus();
+}
+screens.forEach((screen, c) => screen.addEventListener("click", () => {
+  const f = CAMS[c][set % CAMS[c].length][0];
+  lbOpen(PHOTOS.findIndex(p => p.f === f), screen);
+}));
+document.getElementById("lb-prev").addEventListener("click", () => lbShow(at - 1));
+document.getElementById("lb-next").addEventListener("click", () => lbShow(at + 1));
+document.getElementById("lb-close").addEventListener("click", lbClose);
+lb.addEventListener("click", e => { if (e.target === lb) lbClose(); }); // click outside the panel to close
+document.addEventListener("keydown", e => {
+  if (lb.hidden) return;
+  if (e.key === "Escape") lbClose();
+  else if (e.key === "ArrowLeft") lbShow(at - 1);
+  else if (e.key === "ArrowRight") lbShow(at + 1);
+});
+// Swipe left/right on phones
+let x0 = null;
+lb.addEventListener("touchstart", e => { x0 = e.touches[0].clientX; }, { passive: true });
+lb.addEventListener("touchend", e => {
+  if (x0 === null) return;
+  const dx = e.changedTouches[0].clientX - x0; x0 = null;
+  if (Math.abs(dx) > 40) lbShow(at + (dx < 0 ? 1 : -1));
+});
 
 const clientItems = CLIENTS.map(c => `<li>${esc(c)}</li>`).join("");
 document.getElementById("clients-a").innerHTML = clientItems;

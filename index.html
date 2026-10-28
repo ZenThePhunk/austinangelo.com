@@ -160,12 +160,9 @@ a.card:hover h3 { color: var(--gold); }
 .about p { margin: 0; max-width: 60ch; }
 .about .big { font-size: clamp(22px, 2.6vw, 30px); line-height: 1.35; text-wrap: balance; }
 .about-col { display: grid; gap: 28px; min-width: 0; }
-/* Collage: rows of photos whose widths follow each image's shape, so every row is one clean height */
-.collage { display: grid; gap: 8px; min-width: 0; }
-.collage-row { display: flex; gap: 8px; }
-.collage figure { margin: 0; flex: 1 1 0; min-width: 0; }
-.collage img { width: 100%; max-width: 100%; height: auto; object-fit: cover; display: block; border-radius: 2px; outline: 1px solid var(--line); outline-offset: -1px; transition: filter .4s; filter: saturate(.92); }
-.collage img:hover { filter: none; }
+/* About portrait: one photo, kept to a comfortable size beside the bio */
+.portrait { margin: 0; min-width: 0; width: min(100%, 440px); justify-self: center; }
+.portrait img { width: 100%; max-width: 100%; height: auto; display: block; border-radius: 3px; outline: 1px solid var(--line); outline-offset: -1px; }
 
 .clients { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 0; }
 .clients li { font-family: var(--mono); font-size: 13px; border: 1px solid var(--line); padding: 5px 10px; border-radius: 2px; }
@@ -250,21 +247,9 @@ footer .wrap { padding-block: 26px; display: flex; flex-wrap: wrap; justify-cont
           </div>
         </div>
       </div>
-      <div class="collage" aria-label="Photos of Austin">
-        <div class="collage-row">
-          <figure style="flex-grow:0.75"><img src="images/austin-portrait.jpg" alt="Portrait of Austin Angelo" style="aspect-ratio:0.75; object-position:50% 30%" loading="lazy" decoding="async"></figure>
-          <figure style="flex-grow:0.75"><img src="images/austin-stadium.jpg" alt="Austin on the field during an NHL Stadium Series game, wearing a headset" style="aspect-ratio:0.75; object-position:50% 50%" loading="lazy" decoding="async"></figure>
-          <figure style="flex-grow:0.75"><img src="images/offset-camera.jpg" alt="Austin shooting with a film rangefinder camera in the desert" style="aspect-ratio:0.75; object-position:50% 40%" loading="lazy" decoding="async"></figure>
-        </div>
-        <div class="collage-row">
-          <figure style="flex-grow:1.5"><img src="images/onset-army.jpg" alt="Austin reviewing a shot on a monitor with two soldiers on set" style="aspect-ratio:1.5; object-position:50% 50%" loading="lazy" decoding="async"></figure>
-          <figure style="flex-grow:1.5"><img src="images/offset-skate.jpg" alt="Austin skateboarding past a tall white wall" style="aspect-ratio:1.5; object-position:50% 50%" loading="lazy" decoding="async"></figure>
-        </div>
-        <div class="collage-row">
-          <figure style="flex-grow:1.258"><img src="images/offset-bike.jpg" alt="Austin riding a road bike up a hill" style="aspect-ratio:1.258; object-position:50% 50%" loading="lazy" decoding="async"></figure>
-          <figure style="flex-grow:0.924"><img src="images/offset-trail.jpg" alt="Austin running on a mountain trail above the city" style="aspect-ratio:0.924; object-position:50% 50%" loading="lazy" decoding="async"></figure>
-        </div>
-      </div>
+      <figure class="portrait">
+        <img src="images/austin-portrait.jpg" alt="Portrait of Austin Angelo" loading="lazy" decoding="async">
+      </figure>
     </div>
   </section>
 </main>

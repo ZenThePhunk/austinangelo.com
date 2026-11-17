@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html lang="en">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Austin Angelo</title>
@@ -175,6 +177,10 @@ h2 { font-family: var(--display); font-weight: 800; text-transform: uppercase; f
 .shot { position: relative; aspect-ratio: 16 / 9; max-width: 100%; overflow: hidden; background: var(--panel); border-radius: 3px; outline: 1px solid var(--line); outline-offset: -1px; }
 .shot img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s cubic-bezier(.2,.7,.2,1), filter .6s; filter: saturate(.92) brightness(.92); }
 .shot.fit img { object-fit: contain; padding: 8% 14%; background: #fff; }
+/* Award badge on a tile, e.g. an Emmy nomination */
+.shot .award { position: absolute; z-index: 1; left: 10px; top: 10px; right: 10px; width: fit-content; max-width: calc(100% - 20px); font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; background: var(--gold); color: var(--night); padding: 5px 9px; border-radius: 2px; box-shadow: 0 4px 14px rgba(0,0,0,.4); }
+.emmy { color: var(--gold); font-weight: 500; }
+.onair { flex-wrap: wrap; }
 .shot .go {
   position: absolute; right: 12px; bottom: 12px; font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
   background: var(--gold); color: var(--night); padding: 6px 10px; border-radius: 2px; opacity: 0; transform: translateY(6px); transition: .3s;
@@ -232,7 +238,7 @@ footer .wrap { padding-block: 26px; display: flex; flex-wrap: wrap; justify-cont
   <section class="hero" aria-label="Introduction">
     <div class="wrap hero-grid">
       <div class="hero-text">
-      <span class="label onair"><span class="dot" aria-hidden="true"></span>Producer · Production Manager</span>
+      <span class="label onair"><span class="dot" aria-hidden="true"></span><span><b class="emmy">Emmy® Nominee</b> · Producer · Production Manager</span></span>
       <h1><span>Austin</span><span class="out">Angelo</span></h1>
       <p class="lede">Live events, awards shows, and broadcast TV, from <b>NHL Outdoor Stadium Games</b> to the <b>Anime Awards in Tokyo</b>, and <b>America’s Got Talent</b>.</p>
       <div class="hero-meta label">
@@ -274,7 +280,7 @@ footer .wrap { padding-block: 26px; display: flex; flex-wrap: wrap; justify-cont
     <div class="wrap">
       <div class="about-col">
         <h2 id="about-h">About</h2>
-        <p class="big">For the last 10 years, I’ve led large-scale productions across live events, awards shows, specials, commercials, and television. I’ve had the privilege of working across North America, Europe, and Asia, for clients like the NHL, Apple, Crunchyroll, and NBC.</p>
+        <p class="big">For the last 10 years, I’ve led large-scale productions across live events, awards shows, specials, commercials, and television. I’ve had the privilege of working across North America, Europe, and Asia, for clients like the NHL, Apple, Crunchyroll, and NBC. Most recently, I was nominated for a Daytime Emmy® for Outstanding Daytime Special as Line Producer of the Critics Choice 2nd Annual Celebration of LGBTQ+ Cinema & Television.</p>
         <p>Off set, you’ll find me behind a camera, playing bass, on a bike, a long hike, or traveling somewhere new.</p>
         <div class="contact">
           <span class="label">Email</span>
@@ -332,7 +338,7 @@ const PROJECTS = [
   { t: "Crunchyroll Anime Awards 2025", img: "crunchyroll-2025.jpg", url: "https://www.youtube.com/watch?v=XfvswfDsdjE", roles: [["Associate Producer", "2025"]] },
   { t: "40th Film Independent Spirit Awards", img: "spirit-2025.jpg", url: "https://www.youtube.com/watch?v=L8XBHXqjBeQ", roles: [["Associate Producer", "2025"]] },
   { t: "2025 NFCU NHL Stadium Series", img: "stadium-2025.webp", url: "https://www.youtube.com/watch?v=eDRoGOjg4q8", roles: [["Production Manager", "2025"]] },
-  { t: "2nd Annual Celebration of LGBTQ+ Cinema & Television", img: "lgbtq-2025.png", url: "", roles: [["Line Producer", "2025"]] },
+  { t: "2nd Annual Celebration of LGBTQ+ Cinema & Television", img: "lgbtq-2025.png", url: "", award: "Emmy® Nominee", roles: [["Line Producer", "2025"]] },
   { t: "2025 Discover NHL Winter Classic", img: "winter-2025.webp", url: "https://www.youtube.com/playlist?list=PLHjYSHN8W_flldJ2Vdys_lfdGP_q9m4ai", roles: [["Production Manager", "2024–25"]] },
   { t: "NHL Draft 2024", img: "nhl-draft-2024.jpg", url: "https://vimeo.com/981030848", roles: [["Senior Production Manager", "2024"]] },
   { t: "NHL Awards 2024", img: "nhl-awards-2024.png", url: "https://www.youtube.com/playlist?list=PLHjYSHN8W_flldJ2Vdys_lfdGP_q9m4ai", roles: [["Senior Production Manager", "2024"]] },
@@ -359,6 +365,7 @@ document.getElementById("grid").innerHTML = PROJECTS.map(p => {
   return `<${tag} class="card"${link}>
     <div class="shot${p.fit ? " fit" : ""}">
       <img src="images/${p.img}" alt="${esc(p.t)}" loading="lazy" decoding="async">
+      ${p.award ? `<span class="award">★ ${esc(p.award)}</span>` : ""}
       ${p.url ? '<span class="go">Watch / visit ↗</span>' : ""}
     </div>
     <div class="ttl">
